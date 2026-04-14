@@ -1,0 +1,135 @@
+// Version: 3.0.0
+type AttemptId__173561908 = Nat;
+type ChapterId__202794786 = Nat;
+type Chapter__544415000 =
+  {
+    description : Text;
+    id : ChapterId__202794786;
+    name : Text;
+    subjectId : SubjectId__402408784
+  };
+type Data__791452850<K, V> =
+  {var count : Nat__490723111; kvs : [var ?(K, V)]};
+type Difficulty__483003146 = {#Easy; #Hard; #Medium};
+type Internal__8484328<K, V> =
+  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
+type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
+type Nat__490723111 = Nat__920180692;
+type Nat__920180692 = Nat;
+type Node__46230540<K, V> =
+  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type QuestionId__77764146 = Nat;
+type QuestionResult__945378362 =
+  {
+    isCorrect : Bool;
+    questionId : QuestionId__77764146;
+    timeSpent : Nat;
+    userAnswer : Text
+  };
+type QuestionType__251636565 = {#FillInBlank; #MultipleChoice; #TrueFalse};
+type Question__986066947 =
+  {
+    chapterId : ChapterId__202794786;
+    correctAnswer : Text;
+    difficulty : Difficulty__483003146;
+    id : QuestionId__77764146;
+    options : [Text];
+    questionText : Text;
+    questionType : QuestionType__251636565
+  };
+type QuizAttempt__529564763 =
+  {
+    attemptId : AttemptId__173561908;
+    chapterId : ChapterId__202794786;
+    completedAt : Timestamp__301639476;
+    correctAnswers : Nat;
+    questionResults : [QuestionResult__945378362];
+    score : Float;
+    sessionId : SessionId__1052913375;
+    subjectId : SubjectId__402408784;
+    timeTaken : Nat;
+    totalQuestions : Nat;
+    userId : UserId__158757552
+  };
+type SessionId__1052913375 = Nat;
+type SubjectId__402408784 = Nat;
+type Subject__511420708 =
+  {description : Text; id : SubjectId__402408784; name : Text};
+type Timestamp__301639476 = Int;
+type UserId__158757552 = Principal;
+type UserProfile__1041408698 = {name : Text};
+actor ({
+  in ADMIN_PRINCIPAL : Text;
+  stable attemptCounter : {var value : Nat};
+  stable attempts :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?QuizAttempt__529564763]];
+      var elementIndex : Nat__490723111
+    };
+  stable chapterCounter : {var value : Nat};
+  stable chapters :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Chapter__544415000]];
+      var elementIndex : Nat__490723111
+    };
+  stable questionCounter : {var value : Nat};
+  stable questions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Question__986066947]];
+      var elementIndex : Nat__490723111
+    };
+  stable var seeded : Bool;
+  stable sessionCounter : {var value : Nat};
+  stable subjectCounter : {var value : Nat};
+  stable subjects :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Subject__511420708]];
+      var elementIndex : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__1041408698>;
+      var size : Nat__490723111
+    }
+}, {
+  stable adminPrincipalRef : {var value : Text};
+  stable attemptCounter : {var value : Nat};
+  stable attempts :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?QuizAttempt__529564763]];
+      var elementIndex : Nat__490723111
+    };
+  stable chapterCounter : {var value : Nat};
+  stable chapters :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Chapter__544415000]];
+      var elementIndex : Nat__490723111
+    };
+  stable questionCounter : {var value : Nat};
+  stable questions :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Question__986066947]];
+      var elementIndex : Nat__490723111
+    };
+  stable var seeded : Bool;
+  stable sessionCounter : {var value : Nat};
+  stable subjectCounter : {var value : Nat};
+  stable subjects :
+    {
+      var blockIndex : Nat__490723111;
+      var blocks : [var [var ?Subject__511420708]];
+      var elementIndex : Nat__490723111
+    };
+  stable userProfiles :
+    {
+      var root : Node__46230540<Principal, UserProfile__1041408698>;
+      var size : Nat__490723111
+    }
+}) ;

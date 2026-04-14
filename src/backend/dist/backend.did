@@ -1,0 +1,146 @@
+type UserProfile = record {name: text;};
+type UserId = principal;
+type Timestamp = int;
+type SubmitAnswerInput = 
+ record {
+   questionId: QuestionId;
+   timeSpent: nat;
+   userAnswer: text;
+ };
+type SubjectId = nat;
+type Subject = 
+ record {
+   description: text;
+   id: SubjectId;
+   name: text;
+ };
+type StudentProfile = 
+ record {
+   averageScore: float64;
+   bestScore: float64;
+   lastActivity: Timestamp;
+   totalAttempts: nat;
+   userId: UserId;
+ };
+type StartSessionInput = 
+ record {
+   chapterId: ChapterId;
+   questionCount: nat;
+   timeLimit: nat;
+ };
+type SessionId = nat;
+type QuizAttempt = 
+ record {
+   attemptId: AttemptId;
+   chapterId: ChapterId;
+   completedAt: Timestamp;
+   correctAnswers: nat;
+   questionResults: vec QuestionResult;
+   score: float64;
+   sessionId: SessionId;
+   subjectId: SubjectId;
+   timeTaken: nat;
+   totalQuestions: nat;
+   userId: UserId;
+ };
+type QuestionType = 
+ variant {
+   FillInBlank;
+   MultipleChoice;
+   TrueFalse;
+ };
+type QuestionResult = 
+ record {
+   isCorrect: bool;
+   questionId: QuestionId;
+   timeSpent: nat;
+   userAnswer: text;
+ };
+type QuestionId = nat;
+type Question = 
+ record {
+   chapterId: ChapterId;
+   correctAnswer: text;
+   difficulty: Difficulty;
+   id: QuestionId;
+   options: vec text;
+   questionText: text;
+   questionType: QuestionType;
+ };
+type Difficulty = 
+ variant {
+   Easy;
+   Hard;
+   Medium;
+ };
+type ChapterId = nat;
+type Chapter = 
+ record {
+   description: text;
+   id: ChapterId;
+   name: text;
+   subjectId: SubjectId;
+ };
+type AttemptId = nat;
+service : {
+  addChapter: (subjectId: SubjectId, name: text) ->
+   (variant {
+      err: text;
+      ok: ChapterId;
+    });
+  addQuestion: (chapterId: ChapterId, "text": text, questionType: text,
+   options: vec text, correctAnswer: text, difficulty: text) ->
+   (variant {
+      err: text;
+      ok: QuestionId;
+    });
+  addSubject: (name: text, description: text) ->
+   (variant {
+      err: text;
+      ok: SubjectId;
+    });
+  bulkImportQuestions: (data: text) -> (variant {
+                                          err: text;
+                                          ok: nat;
+                                        });
+  /// Set the admin to the caller if not yet claimed (adminPrincipal == "").
+  /// Returns #ok with a confirmation message, or #err if already set.
+  claimAdmin: () -> (variant {
+                       err: text;
+                       ok: text;
+                     });
+  deleteChapter: (id: ChapterId) -> (variant {
+                                       err: text;
+                                       ok;
+                                     });
+  deleteQuestion: (id: QuestionId) -> (variant {
+                                         err: text;
+                                         ok;
+                                       });
+  deleteSubject: (id: SubjectId) -> (variant {
+                                       err: text;
+                                       ok;
+                                     });
+  getAdminPrincipal: () -> (text) query;
+  getAttemptDetail: (attemptId: AttemptId) -> (opt QuizAttempt) query;
+  getCallerPrincipal: () -> (text) query;
+  getCallerUserProfile: () -> (opt UserProfile) query;
+  getChapters: (subjectId: SubjectId) -> (vec Chapter) query;
+  getMyAttempts: () -> (vec QuizAttempt) query;
+  getMyProfile: () -> (StudentProfile) query;
+  getQuestions: (chapterId: ChapterId, count: nat) -> (vec Question) query;
+  getSubjects: () -> (vec Subject) query;
+  getUserProfile: (user: principal) -> (opt UserProfile) query;
+  saveCallerUserProfile: (profile: UserProfile) -> ();
+  submitQuizAttempt: (sessionInput: StartSessionInput, answers:
+   vec SubmitAnswerInput) -> (QuizAttempt);
+  updateChapter: (id: ChapterId, name: text) -> (variant {
+                                                   err: text;
+                                                   ok;
+                                                 });
+  updateSubject: (id: SubjectId, name: text, description: text) ->
+   (variant {
+      err: text;
+      ok;
+    });
+}

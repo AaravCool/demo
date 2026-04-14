@@ -1,0 +1,24 @@
+{
+  "overview": "QuizPractice is a web app for students to practice quiz questions with a timer. Students log in, select a subject and chapter, then take timed quizzes with multiple question formats. Performance is tracked over time with a history view. An admin panel allows content management of subjects, chapters, and questions.",
+  "features": [
+    "Student login via Internet Identity",
+    "Quiz sessions with timer and progress bar",
+    "Multiple question types: multiple choice, true/false, fill-in-the-blank",
+    "Performance history with sortable table and score chart",
+    "Admin panel restricted to specific principal ID",
+    "Admin: manage subjects, chapters, and questions",
+    "Admin: bulk question import via pipe-separated text paste",
+    "Pre-loaded content with 3 subjects, 6 chapters, and 100+ questions"
+  ],
+  "category": "education",
+  "tags": [
+    "quiz",
+    "education",
+    "students",
+    "learning",
+    "practice",
+    "timer",
+    "admin"
+  ],
+  "last_updated": "2026-04-13T17:44:56.903Z"
+}
