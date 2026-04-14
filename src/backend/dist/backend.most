@@ -1,4 +1,4 @@
-// Version: 3.0.0
+// Version: 1.0.0
 type AttemptId__173561908 = Nat;
 type ChapterId__202794786 = Nat;
 type Chapter__544415000 =
@@ -58,44 +58,7 @@ type Subject__511420708 =
 type Timestamp__301639476 = Int;
 type UserId__158757552 = Principal;
 type UserProfile__1041408698 = {name : Text};
-actor ({
-  in ADMIN_PRINCIPAL : Text;
-  stable attemptCounter : {var value : Nat};
-  stable attempts :
-    {
-      var blockIndex : Nat__490723111;
-      var blocks : [var [var ?QuizAttempt__529564763]];
-      var elementIndex : Nat__490723111
-    };
-  stable chapterCounter : {var value : Nat};
-  stable chapters :
-    {
-      var blockIndex : Nat__490723111;
-      var blocks : [var [var ?Chapter__544415000]];
-      var elementIndex : Nat__490723111
-    };
-  stable questionCounter : {var value : Nat};
-  stable questions :
-    {
-      var blockIndex : Nat__490723111;
-      var blocks : [var [var ?Question__986066947]];
-      var elementIndex : Nat__490723111
-    };
-  stable var seeded : Bool;
-  stable sessionCounter : {var value : Nat};
-  stable subjectCounter : {var value : Nat};
-  stable subjects :
-    {
-      var blockIndex : Nat__490723111;
-      var blocks : [var [var ?Subject__511420708]];
-      var elementIndex : Nat__490723111
-    };
-  stable userProfiles :
-    {
-      var root : Node__46230540<Principal, UserProfile__1041408698>;
-      var size : Nat__490723111
-    }
-}, {
+actor {
   stable adminPrincipalRef : {var value : Text};
   stable attemptCounter : {var value : Nat};
   stable attempts :
@@ -132,4 +95,4 @@ actor ({
       var root : Node__46230540<Principal, UserProfile__1041408698>;
       var size : Nat__490723111
     }
-}) ;
+};

@@ -273,7 +273,7 @@ function QuizConfigForm({
 
 export default function DashboardPage() {
   const { actor, isFetching } = useBackend();
-  const { principalId } = useAuth();
+  const { principalId, isInitializing } = useAuth();
   const navigate = useNavigate();
 
   const [subjects, setSubjects] = useState<Subject[]>([]);
@@ -285,16 +285,20 @@ export default function DashboardPage() {
   const [chapters, setChapters] = useState<Chapter[]>([]);
   const [chaptersLoading, setChaptersLoading] = useState(false);
 
-  // Load subjects + profile once actor is ready
+  // Load subjects + profile once actor is ready.
+  // We wait while:
+  //   - Identity is still initializing (Internet Identity loading)
+  //   - The actor is being fetched (query in-flight)
+  // We stop waiting and show empty state when actor is null after init completes
+  // (e.g. user is not logged in).
   useEffect(() => {
-    // While actor is being initialized, show loading skeletons
-    if (isFetching) {
+    if (isInitializing || isFetching) {
       setSubjectsLoading(true);
       setProfileLoading(true);
       return;
     }
-    // Actor failed to initialize (canister not available)
     if (!actor) {
+      // Not logged in — clear loading state and show empty/unauthenticated UI.
       setSubjectsLoading(false);
       setProfileLoading(false);
       return;
@@ -317,7 +321,7 @@ export default function DashboardPage() {
         setProfileLoading(false);
       }
     })();
-  }, [actor, isFetching]);
+  }, [actor, isFetching, isInitializing]);
 
   // Load chapters when subject changes
   useEffect(() => {

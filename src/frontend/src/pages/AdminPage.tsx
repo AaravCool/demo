@@ -88,8 +88,21 @@ export default function AdminPage() {
           </div>
         )}
 
+        {/* Actor still initializing after login */}
+        {isAuthenticated && isAdmin && !actor && (
+          <div
+            className="flex flex-col items-center justify-center py-20 gap-4"
+            data-ocid="admin.loading_state"
+          >
+            <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+            <p className="text-muted-foreground text-sm">
+              Connecting to backend with your identity…
+            </p>
+          </div>
+        )}
+
         {/* Admin panel */}
-        {isAuthenticated && isAdmin && (
+        {isAuthenticated && isAdmin && !!actor && (
           <>
             <div className="mb-6">
               <h1 className="text-2xl font-display font-bold text-foreground flex items-center gap-2">

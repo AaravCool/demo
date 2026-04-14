@@ -9,9 +9,9 @@ import CatalogApi "mixins/catalog-api";
 import CatalogAdminApi "mixins/catalog-admin-api";
 import QuizApi "mixins/quiz-api";
 import StudentApi "mixins/student-api";
-import Migration "migration";
 
-(with migration = Migration.run)
+
+
 actor {
   let subjects = List.empty<CatalogTypes.Subject>();
   let chapters = List.empty<CatalogTypes.Chapter>();
