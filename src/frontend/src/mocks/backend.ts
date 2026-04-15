@@ -143,5 +143,4 @@ export const mockBackend: backendInterface = {
   }),
   deleteQuestion: async (_id) => ({ __kind__: "ok", ok: null }),
   bulkImportQuestions: async (_data) => ({ __kind__: "ok", ok: BigInt(3) }),
-  claimAdmin: async () => ({ __kind__: "ok" as const, ok: "Admin claimed successfully" }),
 };

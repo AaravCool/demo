@@ -103,12 +103,6 @@ service : {
                                           err: text;
                                           ok: nat;
                                         });
-  /// Set the admin to the caller if not yet claimed (adminPrincipal == "").
-  /// Returns #ok with a confirmation message, or #err if already set.
-  claimAdmin: () -> (variant {
-                       err: text;
-                       ok: text;
-                     });
   deleteChapter: (id: ChapterId) -> (variant {
                                        err: text;
                                        ok;

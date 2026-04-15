@@ -1,6 +1,6 @@
 import List "mo:core/List";
 import Map "mo:core/Map";
-import Principal "mo:core/Principal"; // used by Map.empty<Principal, ...>
+import Principal "mo:core/Principal";
 import CatalogTypes "types/catalog";
 import QuizTypes "types/quiz";
 import StudentTypes "types/student";
@@ -9,7 +9,6 @@ import CatalogApi "mixins/catalog-api";
 import CatalogAdminApi "mixins/catalog-admin-api";
 import QuizApi "mixins/quiz-api";
 import StudentApi "mixins/student-api";
-
 
 
 actor {
@@ -27,8 +26,8 @@ actor {
 
   var seeded : Bool = false;
 
-  // Admin principal — empty string means unclaimed. Call claimAdmin() once to set.
-  let adminPrincipalRef = { var value : Text = "" };
+  // Admin principal — immutable constant, never overridden.
+  let admin : Principal = Principal.fromText("stg4z-mbqle-h7omu-re7wj-od36c-yptmv-y5zbm-gmwfv-3zcmc-gvegn-iae");
 
   // Seed catalog data exactly once
   if (not seeded) {
@@ -36,16 +35,8 @@ actor {
     seeded := true;
   };
 
-  /// Set the admin to the caller if not yet claimed (adminPrincipal == "").
-  /// Returns #ok with a confirmation message, or #err if already set.
-  public shared ({ caller }) func claimAdmin() : async { #ok : Text; #err : Text } {
-    if (adminPrincipalRef.value != "") return #err("Admin already set to " # adminPrincipalRef.value);
-    adminPrincipalRef.value := caller.toText();
-    #ok("Admin set to " # adminPrincipalRef.value)
-  };
-
   include CatalogApi(subjects, chapters, questions);
-  include CatalogAdminApi(subjects, chapters, questions, subjectCounter, chapterCounter, questionCounter, adminPrincipalRef);
+  include CatalogAdminApi(subjects, chapters, questions, subjectCounter, chapterCounter, questionCounter, admin);
   include QuizApi(attempts, questions, chapters, attemptCounter, sessionCounter);
   include StudentApi(userProfiles, attempts);
 };

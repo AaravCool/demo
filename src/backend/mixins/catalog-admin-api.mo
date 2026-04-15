@@ -1,6 +1,6 @@
 import List "mo:core/List";
 import Nat "mo:core/Nat";
-import Text "mo:core/Text";
+import Debug "mo:core/Debug";
 import CatalogTypes "../types/catalog";
 import Common "../types/common";
 
@@ -11,7 +11,7 @@ mixin (
   subjectCounter : { var value : Nat },
   chapterCounter : { var value : Nat },
   questionCounter : { var value : Nat },
-  adminPrincipalRef : { var value : Text }
+  admin : Principal
 ) {
 
   // ── Diagnostics (no auth required) ─────────────────────────────────────────
@@ -21,21 +21,29 @@ mixin (
   };
 
   public query func getAdminPrincipal() : async Text {
-    adminPrincipalRef.value
+    admin.toText()
   };
 
   // ── Subjects ────────────────────────────────────────────────────────────────
 
-  public shared ({ caller }) func addSubject(name : Text, description : Text) : async { #ok : Common.SubjectId; #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func addSubject(name : Text, description : Text) : async { #ok : Common.SubjectId; #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     let id = subjectCounter.value;
     subjectCounter.value += 1;
     subjects.add({ id; name; description });
     #ok(id)
   };
 
-  public shared ({ caller }) func updateSubject(id : Common.SubjectId, name : Text, description : Text) : async { #ok : (); #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func updateSubject(id : Common.SubjectId, name : Text, description : Text) : async { #ok : (); #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     switch (subjects.findIndex(func(s) { s.id == id })) {
       case (?idx) {
         subjects.put(idx, { id; name; description });
@@ -45,8 +53,12 @@ mixin (
     }
   };
 
-  public shared ({ caller }) func deleteSubject(id : Common.SubjectId) : async { #ok : (); #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func deleteSubject(id : Common.SubjectId) : async { #ok : (); #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     let before = subjects.size();
     let kept = subjects.filter(func(s) { s.id != id });
     subjects.clear();
@@ -56,8 +68,12 @@ mixin (
 
   // ── Chapters ────────────────────────────────────────────────────────────────
 
-  public shared ({ caller }) func addChapter(subjectId : Common.SubjectId, name : Text) : async { #ok : Common.ChapterId; #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func addChapter(subjectId : Common.SubjectId, name : Text) : async { #ok : Common.ChapterId; #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     switch (subjects.find(func(s) { s.id == subjectId })) {
       case null { return #err("Subject not found") };
       case _ {};
@@ -68,8 +84,12 @@ mixin (
     #ok(id)
   };
 
-  public shared ({ caller }) func updateChapter(id : Common.ChapterId, name : Text) : async { #ok : (); #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func updateChapter(id : Common.ChapterId, name : Text) : async { #ok : (); #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     switch (chapters.findIndex(func(c) { c.id == id })) {
       case (?idx) {
         let existing = chapters.at(idx);
@@ -80,8 +100,12 @@ mixin (
     }
   };
 
-  public shared ({ caller }) func deleteChapter(id : Common.ChapterId) : async { #ok : (); #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func deleteChapter(id : Common.ChapterId) : async { #ok : (); #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     let before = chapters.size();
     let kept = chapters.filter(func(c) { c.id != id });
     chapters.clear();
@@ -91,7 +115,7 @@ mixin (
 
   // ── Questions ────────────────────────────────────────────────────────────────
 
-  public shared ({ caller }) func addQuestion(
+  public shared (msg) func addQuestion(
     chapterId : Common.ChapterId,
     text : Text,
     questionType : Text,
@@ -99,7 +123,11 @@ mixin (
     correctAnswer : Text,
     difficulty : Text
   ) : async { #ok : Common.QuestionId; #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     let qtype : CatalogTypes.QuestionType = switch (questionType) {
       case ("MultipleChoice") #MultipleChoice;
       case ("TrueFalse") #TrueFalse;
@@ -126,8 +154,12 @@ mixin (
     #ok(id)
   };
 
-  public shared ({ caller }) func deleteQuestion(id : Common.QuestionId) : async { #ok : (); #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func deleteQuestion(id : Common.QuestionId) : async { #ok : (); #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     let before = questions.size();
     let kept = questions.filter(func(q) { q.id != id });
     questions.clear();
@@ -142,8 +174,12 @@ mixin (
   // difficulty (optional, default Medium): Easy | Medium | Hard
   // chapterId (optional, default 0): Nat
 
-  public shared ({ caller }) func bulkImportQuestions(data : Text) : async { #ok : Nat; #err : Text } {
-    if (caller.toText() != adminPrincipalRef.value) return #err("Unauthorized");
+  public shared (msg) func bulkImportQuestions(data : Text) : async { #ok : Nat; #err : Text } {
+    if (msg.caller != admin) {
+      return #err("unauthorized");
+    };
+    Debug.print("caller: " # msg.caller.toText());
+    Debug.print("admin: " # admin.toText());
     var imported : Nat = 0;
     for (line in data.split(#char '\n')) {
       let trimmed = line.trim(#char ' ');

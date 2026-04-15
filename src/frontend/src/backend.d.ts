@@ -112,17 +112,6 @@ export interface backendInterface {
         __kind__: "err";
         err: string;
     }>;
-    /**
-     * / Set the admin to the caller if not yet claimed (adminPrincipal == "").
-     * / Returns #ok with a confirmation message, or #err if already set.
-     */
-    claimAdmin(): Promise<{
-        __kind__: "ok";
-        ok: string;
-    } | {
-        __kind__: "err";
-        err: string;
-    }>;
     deleteChapter(id: ChapterId): Promise<{
         __kind__: "ok";
         ok: null;

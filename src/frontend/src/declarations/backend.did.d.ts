@@ -101,11 +101,6 @@ export interface _SERVICE {
     { 'ok' : bigint } |
       { 'err' : string }
   >,
-  /**
-   * / Set the admin to the caller if not yet claimed (adminPrincipal == "").
-   * / Returns #ok with a confirmation message, or #err if already set.
-   */
-  'claimAdmin' : ActorMethod<[], { 'ok' : string } | { 'err' : string }>,
   'deleteChapter' : ActorMethod<
     [ChapterId],
     { 'ok' : null } |

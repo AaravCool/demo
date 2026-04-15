@@ -104,11 +104,6 @@ export const idlService = IDL.Service({
       [IDL.Variant({ 'ok' : IDL.Nat, 'err' : IDL.Text })],
       [],
     ),
-  'claimAdmin' : IDL.Func(
-      [],
-      [IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text })],
-      [],
-    ),
   'deleteChapter' : IDL.Func(
       [ChapterId],
       [IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text })],
@@ -257,11 +252,6 @@ export const idlFactory = ({ IDL }) => {
     'bulkImportQuestions' : IDL.Func(
         [IDL.Text],
         [IDL.Variant({ 'ok' : IDL.Nat, 'err' : IDL.Text })],
-        [],
-      ),
-    'claimAdmin' : IDL.Func(
-        [],
-        [IDL.Variant({ 'ok' : IDL.Text, 'err' : IDL.Text })],
         [],
       ),
     'deleteChapter' : IDL.Func(

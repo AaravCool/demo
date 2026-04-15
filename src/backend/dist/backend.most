@@ -59,7 +59,7 @@ type Timestamp__301639476 = Int;
 type UserId__158757552 = Principal;
 type UserProfile__1041408698 = {name : Text};
 actor {
-  stable adminPrincipalRef : {var value : Text};
+  stable admin : Principal;
   stable attemptCounter : {var value : Nat};
   stable attempts :
     {
