@@ -4,12 +4,14 @@ import {
   BookOpen,
   Database,
   FileText,
+  ListChecks,
   ShieldAlert,
 } from "lucide-react";
 import { Layout } from "../components/Layout";
 import { AddQuestionTab } from "../components/admin/AddQuestionTab";
 import { BulkImportTab } from "../components/admin/BulkImportTab";
 import { ChaptersTab } from "../components/admin/ChaptersTab";
+import { ManageQuestionsTab } from "../components/admin/ManageQuestionsTab";
 import { SubjectsTab } from "../components/admin/SubjectsTab";
 import { useAuth } from "../hooks/useAuth";
 import { useBackend } from "../hooks/useBackend";
@@ -138,6 +140,13 @@ export default function AdminPage() {
                   <FileText className="w-3.5 h-3.5 mr-1.5" />
                   Bulk Import
                 </TabsTrigger>
+                <TabsTrigger
+                  value="manage-questions"
+                  data-ocid="admin.manage_questions.tab"
+                >
+                  <ListChecks className="w-3.5 h-3.5 mr-1.5" />
+                  Manage Questions
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="subjects">
@@ -151,6 +160,9 @@ export default function AdminPage() {
               </TabsContent>
               <TabsContent value="bulk-import">
                 <BulkImportTab actor={actor} />
+              </TabsContent>
+              <TabsContent value="manage-questions">
+                <ManageQuestionsTab actor={actor} />
               </TabsContent>
             </Tabs>
           </>
