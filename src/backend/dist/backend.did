@@ -66,6 +66,7 @@ type Question =
    options: vec text;
    questionText: text;
    questionType: QuestionType;
+   solution: opt text;
  };
 type Difficulty = 
  variant {
@@ -89,11 +90,11 @@ service : {
       ok: ChapterId;
     });
   addQuestion: (chapterId: ChapterId, "text": text, questionType: text,
-   options: vec text, correctAnswer: text, difficulty: text) ->
-   (variant {
-      err: text;
-      ok: QuestionId;
-    });
+   options: vec text, correctAnswer: text, difficulty: text, solution:
+   opt text) -> (variant {
+                   err: text;
+                   ok: QuestionId;
+                 });
   addSubject: (name: text, description: text) ->
    (variant {
       err: text;

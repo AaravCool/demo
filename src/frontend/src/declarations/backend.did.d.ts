@@ -28,6 +28,7 @@ export interface Question {
   'chapterId' : ChapterId,
   'questionText' : string,
   'questionType' : QuestionType,
+  'solution' : [] | [string],
   'options' : Array<string>,
 }
 export type QuestionId = bigint;
@@ -87,7 +88,7 @@ export interface _SERVICE {
       { 'err' : string }
   >,
   'addQuestion' : ActorMethod<
-    [ChapterId, string, string, Array<string>, string, string],
+    [ChapterId, string, string, Array<string>, string, string, [] | [string]],
     { 'ok' : QuestionId } |
       { 'err' : string }
   >,

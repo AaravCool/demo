@@ -62,6 +62,7 @@ export interface Question {
     chapterId: ChapterId;
     questionText: string;
     questionType: QuestionType;
+    solution?: string;
     options: Array<string>;
 }
 export type SubjectId = bigint;
@@ -91,7 +92,7 @@ export interface backendInterface {
         __kind__: "err";
         err: string;
     }>;
-    addQuestion(chapterId: ChapterId, text: string, questionType: string, options: Array<string>, correctAnswer: string, difficulty: string): Promise<{
+    addQuestion(chapterId: ChapterId, text: string, questionType: string, options: Array<string>, correctAnswer: string, difficulty: string, solution: string | null): Promise<{
         __kind__: "ok";
         ok: QuestionId;
     } | {

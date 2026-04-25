@@ -65,6 +65,7 @@ export const Question = IDL.Record({
   'chapterId' : ChapterId,
   'questionText' : IDL.Text,
   'questionType' : QuestionType,
+  'solution' : IDL.Opt(IDL.Text),
   'options' : IDL.Vec(IDL.Text),
 });
 export const Subject = IDL.Record({
@@ -90,7 +91,15 @@ export const idlService = IDL.Service({
       [],
     ),
   'addQuestion' : IDL.Func(
-      [ChapterId, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Text, IDL.Text],
+      [
+        ChapterId,
+        IDL.Text,
+        IDL.Text,
+        IDL.Vec(IDL.Text),
+        IDL.Text,
+        IDL.Text,
+        IDL.Opt(IDL.Text),
+      ],
       [IDL.Variant({ 'ok' : QuestionId, 'err' : IDL.Text })],
       [],
     ),
@@ -215,6 +224,7 @@ export const idlFactory = ({ IDL }) => {
     'chapterId' : ChapterId,
     'questionText' : IDL.Text,
     'questionType' : QuestionType,
+    'solution' : IDL.Opt(IDL.Text),
     'options' : IDL.Vec(IDL.Text),
   });
   const Subject = IDL.Record({
@@ -240,7 +250,15 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'addQuestion' : IDL.Func(
-        [ChapterId, IDL.Text, IDL.Text, IDL.Vec(IDL.Text), IDL.Text, IDL.Text],
+        [
+          ChapterId,
+          IDL.Text,
+          IDL.Text,
+          IDL.Vec(IDL.Text),
+          IDL.Text,
+          IDL.Text,
+          IDL.Opt(IDL.Text),
+        ],
         [IDL.Variant({ 'ok' : QuestionId, 'err' : IDL.Text })],
         [],
       ),

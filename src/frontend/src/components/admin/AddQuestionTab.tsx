@@ -46,6 +46,7 @@ export function AddQuestionTab({ actor }: Props) {
   const [options, setOptions] = useState(["", "", "", ""]);
   const [correctAnswer, setCorrectAnswer] = useState("");
   const [difficulty, setDifficulty] = useState("Medium");
+  const [solution, setSolution] = useState("");
   const [submitError, setSubmitError] = useState("");
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
@@ -87,6 +88,8 @@ export function AddQuestionTab({ actor }: Props) {
         finalOptions = ["True", "False"];
       }
 
+      const solutionValue: string | null = solution.trim() || null;
+
       const result = await actor.addQuestion(
         chapterId,
         questionText.trim(),
@@ -94,8 +97,9 @@ export function AddQuestionTab({ actor }: Props) {
         finalOptions,
         correctAnswer.trim(),
         difficulty,
+        solutionValue,
       );
-      if (result.__kind__ === "err") throw new Error(result.err);
+      if ("err" in result) throw new Error(result.err);
       return result;
     },
     onSuccess: () => {
@@ -103,6 +107,7 @@ export function AddQuestionTab({ actor }: Props) {
       setOptions(["", "", "", ""]);
       setCorrectAnswer("");
       setDifficulty("Medium");
+      setSolution("");
       setSubmitError("");
       setSubmitSuccess(true);
       setTimeout(() => setSubmitSuccess(false), 4000);
@@ -307,6 +312,26 @@ export function AddQuestionTab({ actor }: Props) {
             data-ocid="admin.add_question.correct_answer.input"
           />
         )}
+      </div>
+
+      {/* Solution / Explanation */}
+      <div className="space-y-1.5">
+        <Label htmlFor="q-solution">
+          Solution / Explanation{" "}
+          <span className="text-muted-foreground font-normal">(optional)</span>
+        </Label>
+        <Textarea
+          id="q-solution"
+          placeholder="Explain why this is the correct answer…"
+          value={solution}
+          onChange={(e) => setSolution(e.target.value)}
+          rows={3}
+          data-ocid="admin.add_question.solution.textarea"
+        />
+        <p className="text-xs text-muted-foreground">
+          This explanation will be shown to students after they complete the
+          quiz.
+        </p>
       </div>
 
       {submitError && <ErrorMsg msg={submitError} />}

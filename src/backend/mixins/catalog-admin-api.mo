@@ -121,7 +121,8 @@ mixin (
     questionType : Text,
     options : [Text],
     correctAnswer : Text,
-    difficulty : Text
+    difficulty : Text,
+    solution : ?Text
   ) : async { #ok : Common.QuestionId; #err : Text } {
     if (msg.caller != admin) {
       return #err("unauthorized");
@@ -150,6 +151,7 @@ mixin (
       options;
       correctAnswer;
       difficulty = diff;
+      solution;
     });
     #ok(id)
   };
@@ -169,10 +171,11 @@ mixin (
 
   // ── Bulk Import ──────────────────────────────────────────────────────────────
   // Line format (pipe-separated):
-  //   Question text | opt1 | opt2 | opt3 | opt4 | correct_answer | question_type | difficulty | chapterId
+  //   Question text | opt1 | opt2 | opt3 | opt4 | correct_answer | question_type | difficulty | chapterId | solution
   // question_type: MultipleChoice | TrueFalse | FillInBlank
   // difficulty (optional, default Medium): Easy | Medium | Hard
   // chapterId (optional, default 0): Nat
+  // solution (optional): any text
 
   public shared (msg) func bulkImportQuestions(data : Text) : async { #ok : Nat; #err : Text } {
     if (msg.caller != admin) {
@@ -200,6 +203,7 @@ mixin (
               case null 0;
             }
           } else 0;
+          let solution : ?Text = if (parts.size() >= 10 and not parts[9].isEmpty()) ?parts[9] else null;
           let qtype : CatalogTypes.QuestionType = switch (questionTypeText) {
             case ("TrueFalse") #TrueFalse;
             case ("FillInBlank") #FillInBlank;
@@ -226,6 +230,7 @@ mixin (
             options = opts.toArray();
             correctAnswer;
             difficulty = diff;
+            solution;
           });
           imported += 1;
         };

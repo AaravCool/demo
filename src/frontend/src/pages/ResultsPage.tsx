@@ -5,6 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useParams } from "@tanstack/react-router";
 import { useNavigate } from "@tanstack/react-router";
 import {
+  BookOpen,
   CheckCircle2,
   ChevronDown,
   ChevronUp,
@@ -223,6 +224,23 @@ function QuestionRow({
                   </li>
                 ))}
               </ul>
+            </div>
+          )}
+
+          {question?.solution && (
+            <div
+              className="flex gap-2.5 rounded-lg border border-[oklch(0.82_0.08_250)] bg-[oklch(0.97_0.03_250)] px-3 py-2.5 text-sm"
+              data-ocid={`question-solution-${idx}`}
+            >
+              <BookOpen className="w-4 h-4 mt-0.5 flex-shrink-0 text-[oklch(0.50_0.16_250)]" />
+              <div>
+                <span className="font-semibold text-[oklch(0.40_0.16_250)] block leading-tight mb-0.5">
+                  Explanation
+                </span>
+                <span className="text-[oklch(0.38_0.10_250)] leading-relaxed">
+                  {question.solution}
+                </span>
+              </div>
             </div>
           )}
         </div>

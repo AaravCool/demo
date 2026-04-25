@@ -20,7 +20,7 @@ interface Props {
 }
 
 const FORMAT_EXAMPLE =
-  "What is 2 + 2? | 3 | 4 | 5 | 6 | 4 | MultipleChoice\nIs water H2O? | True | False | | | True | TrueFalse\nThe capital of France is ____. | | | | | Paris | FillInBlank";
+  "What is 2 + 2? | 3 | 4 | 5 | 6 | 4 | MultipleChoice | Medium\nIs water H2O? | True | False | | | True | TrueFalse | Easy | Water is made of hydrogen and oxygen.\nThe capital of France is ____. | | | | | Paris | FillInBlank | Hard";
 
 function ErrorMsg({ msg }: { msg: string }) {
   return (
@@ -31,9 +31,12 @@ function ErrorMsg({ msg }: { msg: string }) {
 }
 
 /**
- * For each non-empty line, ensure 9 pipe-separated fields exist:
- * [0] question, [1-4] options, [5] correct, [6] type, [7] difficulty, [8] chapterId
- * Missing difficulty defaults to "medium". Field [8] is always overwritten with chapterId.
+ * For each non-empty line, inject chapterId at position 8 (after difficulty).
+ * User input fields:
+ *   [0] question, [1-4] options, [5] correct, [6] type, [7] difficulty, [8?] solution
+ * After injection:
+ *   [0-7] same, [8] chapterId, [9?] solution (shifted from user's index 8)
+ * Missing difficulty defaults to "Medium".
  */
 function injectChapterId(rawText: string, chapterId: string): string {
   return rawText
@@ -42,13 +45,13 @@ function injectChapterId(rawText: string, chapterId: string): string {
       const trimmed = line.trim();
       if (!trimmed) return "";
       const fields = trimmed.split("|").map((f) => f.trim());
-      // Pad to at least 9 fields
+      // Pad to at least 8 fields (0-7)
       while (fields.length < 8) fields.push("");
-      if (fields.length < 9) fields.push(""); // slot for chapterId
-      // If difficulty (index 7) is empty, default to "medium"
-      if (!fields[7]) fields[7] = "medium";
-      // Set chapterId at index 8
-      fields[8] = chapterId;
+      // If difficulty (index 7) is empty, default to "Medium"
+      if (!fields[7]) fields[7] = "Medium";
+      // Preserve optional solution at index 8 (user-supplied), then inject chapterId at index 8
+      // by splicing it in — solution shifts to index 9
+      fields.splice(8, 0, chapterId);
       return fields.join(" | ");
     })
     .filter((line) => line !== "")
@@ -128,8 +131,8 @@ export function BulkImportTab({ actor }: Props) {
           <code className="bg-muted px-1 rounded">|</code>:
         </p>
         <code className="block text-xs bg-muted rounded-md px-3 py-2 text-foreground whitespace-pre-wrap font-mono leading-relaxed">
-          Question text | option1 | option2 | option3 | option4 | correct_answer
-          | question_type
+          question | option1 | option2 | option3 | option4 | correct_answer |
+          question_type | difficulty | solution (optional)
         </code>
         <div className="text-xs text-muted-foreground space-y-1">
           <p>
@@ -138,6 +141,18 @@ export function BulkImportTab({ actor }: Props) {
             <code className="bg-muted px-1 rounded">MultipleChoice</code>,{" "}
             <code className="bg-muted px-1 rounded">TrueFalse</code>,{" "}
             <code className="bg-muted px-1 rounded">FillInBlank</code>
+          </p>
+          <p>
+            <span className="text-foreground font-medium">difficulty</span>:{" "}
+            <code className="bg-muted px-1 rounded">Easy</code>,{" "}
+            <code className="bg-muted px-1 rounded">Medium</code>,{" "}
+            <code className="bg-muted px-1 rounded">Hard</code> (defaults to
+            Medium if omitted)
+          </p>
+          <p>
+            <span className="text-foreground font-medium">solution</span>: an
+            optional 9th field — shown to students after the quiz as an
+            explanation for the correct answer.
           </p>
           <p>For TrueFalse/FillInBlank, options 1–4 can be left empty.</p>
         </div>

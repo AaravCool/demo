@@ -34,5 +34,6 @@ module {
     options : [Text];
     correctAnswer : Text;
     difficulty : Difficulty;
+    solution : ?Text;
   };
 };
